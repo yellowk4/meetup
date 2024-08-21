@@ -1,4 +1,5 @@
 import NewMeetupForm from '../../components/meetups/NewMeetupForm';
+import { useRouter } from 'next/router';
 
 interface Meetup {
   id: string;
@@ -9,6 +10,8 @@ interface Meetup {
 }
 
 function NewMeetupPage() {
+  const router = useRouter();
+
   async function addMeetupHandler(enteredMeetupData: Meetup) {
     console.log(enteredMeetupData);
     // const response = await fetch('https://some-domain.com/abc');
@@ -23,6 +26,8 @@ function NewMeetupPage() {
     const data = await response.json();
 
     console.log(data);
+
+    router.push('/');
   }
 
   return <NewMeetupForm onAddMeetup={addMeetupHandler} />;
