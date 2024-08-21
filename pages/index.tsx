@@ -2,6 +2,18 @@ import { useEffect, useState } from 'react';
 import MeetupList from '../components/meetups/MeetupList';
 // import Layout from '../components/layout/Layout';
 
+interface Meetup {
+  id: string;
+  title: string;
+  image: string;
+  address: string;
+  description: string;
+}
+
+interface MeetupProps {
+  meetups: Meetup[]; // meetups 배열은 Meetup 객체를 요소로 가집니다.
+}
+
 const DUMMY_MEETUPS = [
   {
     id: 'm1',
@@ -20,7 +32,7 @@ const DUMMY_MEETUPS = [
   },
 ];
 
-function HomePage(props) {
+function HomePage(props: MeetupProps) {
   // const [loadedMeetups, setLoadedMeetups] = useState([]);
 
   // useEffect(() => {
@@ -36,17 +48,40 @@ function HomePage(props) {
   );
 }
 
-export async function getStaticProps() {
-  // getStaticProps(정적 생성 방식)는 Next.js가 우리를 위해 실행하는 특수 함수입니다.
-  // fetch data from an API
-  // const response = await fetch('https://api.example.com/data');
-  // const data = await response.json();
+// npm run build 빌드할 때 딱 한 번만 실행되는 정적 사이트 생성(Static Site Generation) 함수이다.
+// getStaticProps(정적 생성 방식)는 Next.js가 우리를 위해 실행하는 특수 함수입니다.
+// 클라이언트 측에서 실행되는 것이 아니라 서버 측에서 실행됩니다.
+// 앱 빌드 후에 바뀌지 않는 내용이 있는 Page에서 사용하는 것이 좋다.
+// e.g. 마케팅 페이지, 블로그 포스트, 제품 목록, 도움말 및 문서 등
+// getStaticPaths 는 동적 라우팅 페이지에서 getStaticProps 를 사용할 때 함께 사용한다.
+// SSR 보다 성능이 좋다.
 
+// fetch data from an API
+// const response = await fetch('https://api.example.com/data');
+// const data = await response.json();
+
+export async function getStaticProps() {
   return {
     props: {
       meetups: DUMMY_MEETUPS,
     },
+    revalidate: 10, // 10초마다 재생성
   };
 }
+
+// SSR(Server Side Rendering)은 Next.js가 서버 측에서 실행하는 특수 함수입니다.
+// 요청이 들어올 때마다 실행됩니다.
+// 요청이 들어올 때까지 기다려야 함
+// 자주 바뀌는 데이터를 렌더링할 때 사용
+// export async function getServerSideProps(context) {
+//   const req = context.req;
+//   const res = context.res;
+
+//   return {
+//     props: {
+//       meetups: DUMMY_MEETUPS,
+//     },
+//   };
+// }
 
 export default HomePage;
